@@ -62,7 +62,15 @@ class APRO:
 
    # Need to clean up to include % battery remaining
    def get_voltage(self, ADC):
-      return ADC.read("P9_39")* 1.8 * 4.55
+      return ADC.read("P9_39")* 1.8 * 4
+      
+   def get_percentage(self, ADC):
+      Vo = ADC.read("P9_39") * 1.8 
+      R1 = 10 * 1000
+      R2 = 2.2 * 1000
+      Vi = Vo * (R1 + R2) / R2
+      Vt = 8.4
+      return Vt / Vi
 
    def init_socket(self, server):
       host = '192.168.7.2'
