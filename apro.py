@@ -65,7 +65,10 @@ class APRO:
       return ADC.read("P9_39")* 1.8 * 4
       
    def get_percentage(self, ADC):
+      Vo = ADC.read("P9_39") * 1.8
+      # Read twice because of Adafruit bug not getting latest value
       Vo = ADC.read("P9_39") * 1.8 
+
       R1 = 10 * 1000
       R2 = 2.2 * 1000
       Vi = Vo * (R1 + R2) / R2
