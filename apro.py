@@ -1,8 +1,12 @@
 from nrf24 import NRF24
 import math
 import struct
+import Adafruit_BBIO.ADC as ADC
 
 class APRO:
+   def __init__(self):
+      ADC.setup()
+
    def set_pwm(self, pwm1, pwm2, pwm3):
       self.pwm1 = pwm1
       self.pwm2 = pwm2
@@ -54,23 +58,21 @@ class APRO:
             fusionPose = data["fusionPose"]
             return math.degrees(fusionPose[1])
 
-   def init_ADC (self, ADC):
-      ADC.setup()
-
-   # Need to clean up to include % battery remaining
-   def get_voltage(self, ADC):
-      return ADC.read("P9_39")* 1.8 * 4
-      
-   def get_percentage(self, ADC):
-      Vo = ADC.read("P9_39") * 1.8
-      # Read twice because of Adafruit bug not getting latest value
+   def get_voltage(self):
+      Vo = ADC.read("P9_39")* 1.8 
       Vo = ADC.read("P9_39") * 1.8 
-
       R1 = 10 * 1000
       R2 = 2.2 * 1000
       Vi = Vo * (R1 + R2) / R2
-      Vt = 8.4
-      return Vt / Vi
+      return Vi
+
+   def get_percentage(self):
+      Vi = self.get_voltage()
+      Vh = 8.4
+      Vl = 7
+      m = 100 / (Vh - Vl) 
+      percent = m * (Vi - Vl)
+      return percent 
 
    def init_socket(self, server):
       host = '192.168.7.2'
