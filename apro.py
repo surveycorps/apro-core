@@ -3,9 +3,6 @@ import math
 import struct
 
 class APRO:
-   def __init__(self, num):
-      self.num = num
-
    def set_pwm(self, pwm1, pwm2, pwm3):
       self.pwm1 = pwm1
       self.pwm2 = pwm2
